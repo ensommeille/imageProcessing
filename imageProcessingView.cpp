@@ -14,59 +14,59 @@
 IMPLEMENT_DYNCREATE(CimageProcessingView, CView)
 
 BEGIN_MESSAGE_MAP(CimageProcessingView, CView)
-	ON_COMMAND(ID_IMAGEPROCESS_OPENBMPFILE, &CimageProcessingView::OnImageprocessOpenbmpfile)
-	ON_COMMAND(ID_IMAGEPROCESS_SAVETOFILE, &CimageProcessingView::OnImageprocessSavetofile)
-	ON_COMMAND(ID_IMAGEPROCESS_DISPLAYFILEHEADER, &CimageProcessingView::OnImageprocessDisplayfileheader)
-	ON_COMMAND(ID_IMAGEPROCESS_DISPLAYPALETTE, &CimageProcessingView::OnImageprocessDisplaypalette)
-	ON_COMMAND(ID_IMAGEPROCESS_GETPIXELVALUE, &CimageProcessingView::OnImageprocessGetpixelvalue)
-	ON_COMMAND(ID_IMAGEPROCESS_SETPIXELVALUE, &CimageProcessingView::OnImageprocessSetpixelvalue)
-	ON_COMMAND(ID_IMAGEPROCESS_INERPOLATION, &CimageProcessingView::OnImageprocessInerpolation)
-	ON_COMMAND(ID_IMAGEPROCESS_GAUSSSMOOTH, &CimageProcessingView::OnImageprocessGausssmooth)
-	ON_COMMAND(ID_IMAGEPROCESS_MEDIANFILTER, &CimageProcessingView::OnImageprocessMedianfilter)
-	ON_COMMAND(ID_IMAGEPROCESS_BILATERALFILTER, &CimageProcessingView::OnImageprocessBilateralfilter)
-	ON_COMMAND(ID_IMAGEPROCESS_HISTOEQUALIZATION, &CimageProcessingView::OnImageprocessHistoequalization)
-	ON_COMMAND(ID_IMAGEPROCESS_SHARPENGRAD, &CimageProcessingView::OnImageprocessSharpengrad)
-	ON_COMMAND(ID_IMAGEPROCESS_CANNYEDGE, &CimageProcessingView::OnImageprocessCannyedge)
-	ON_COMMAND(ID_IMAGEPROCESS_OTSUSEGMENT, &CimageProcessingView::OnImageprocessOtsusegment)
+    ON_COMMAND(ID_IMAGEPROCESS_OPENBMPFILE, &CimageProcessingView::OnImageprocessOpenbmpfile)
+    ON_COMMAND(ID_IMAGEPROCESS_SAVETOFILE, &CimageProcessingView::OnImageprocessSavetofile)
+    ON_COMMAND(ID_IMAGEPROCESS_DISPLAYFILEHEADER, &CimageProcessingView::OnImageprocessDisplayfileheader)
+    ON_COMMAND(ID_IMAGEPROCESS_DISPLAYPALETTE, &CimageProcessingView::OnImageprocessDisplaypalette)
+    ON_COMMAND(ID_IMAGEPROCESS_GETPIXELVALUE, &CimageProcessingView::OnImageprocessGetpixelvalue)
+    ON_COMMAND(ID_IMAGEPROCESS_SETPIXELVALUE, &CimageProcessingView::OnImageprocessSetpixelvalue)
+    ON_COMMAND(ID_IMAGEPROCESS_INERPOLATION, &CimageProcessingView::OnImageprocessInerpolation)
+    ON_COMMAND(ID_IMAGEPROCESS_GAUSSSMOOTH, &CimageProcessingView::OnImageprocessGausssmooth)
+    ON_COMMAND(ID_IMAGEPROCESS_MEDIANFILTER, &CimageProcessingView::OnImageprocessMedianfilter)
+    ON_COMMAND(ID_IMAGEPROCESS_BILATERALFILTER, &CimageProcessingView::OnImageprocessBilateralfilter)
+    ON_COMMAND(ID_IMAGEPROCESS_HISTOEQUALIZATION, &CimageProcessingView::OnImageprocessHistoequalization)
+    ON_COMMAND(ID_IMAGEPROCESS_SHARPENGRAD, &CimageProcessingView::OnImageprocessSharpengrad)
+    ON_COMMAND(ID_IMAGEPROCESS_CANNYEDGE, &CimageProcessingView::OnImageprocessCannyedge)
+    ON_COMMAND(ID_IMAGEPROCESS_OTSUSEGMENT, &CimageProcessingView::OnImageprocessOtsusegment)
 END_MESSAGE_MAP()
 
 CimageProcessingView::CimageProcessingView() noexcept
 {
-	pFileBuf = NULL;
+    pFileBuf = NULL;
 }
 
 CimageProcessingView::~CimageProcessingView()
 {
-	if( pFileBuf ) 
-	{
-		delete [] pFileBuf;
-		pFileBuf = 0;
-	}
+    if (pFileBuf)
+    {
+        delete[] pFileBuf;
+        pFileBuf = 0;
+    }
 }
 
 BOOL CimageProcessingView::PreCreateWindow(CREATESTRUCT& cs)
 {
-	// TODO: 在此处通过修改
-	//  CREATESTRUCT cs 来修改窗口类或样式
+    // TODO: 在此处通过修改
+    //  CREATESTRUCT cs 来修改窗口类或样式
 
-	return CView::PreCreateWindow(cs);
+    return CView::PreCreateWindow(cs);
 }
 
 #ifdef _DEBUG
 void CimageProcessingView::AssertValid() const
 {
-	CView::AssertValid();
+    CView::AssertValid();
 }
 
 void CimageProcessingView::Dump(CDumpContext& dc) const
 {
-	CView::Dump(dc);
+    CView::Dump(dc);
 }
 
-CimageProcessingDoc *CimageProcessingView::GetDocument() const // 非调试版本是内联的
+CimageProcessingDoc* CimageProcessingView::GetDocument() const // 非调试版本是内联的
 {
-	ASSERT(m_pDocument->IsKindOf(RUNTIME_CLASS(CimageProcessingDoc)));
-	return (CimageProcessingDoc*)m_pDocument;
+    ASSERT(m_pDocument->IsKindOf(RUNTIME_CLASS(CimageProcessingDoc)));
+    return (CimageProcessingDoc*)m_pDocument;
 }
 #endif //_DEBUG
 
@@ -74,18 +74,18 @@ CimageProcessingDoc *CimageProcessingView::GetDocument() const // 非调试版�
 ////////////////////////////////////////////////////////////////////
 
 // CimageProcessingView 绘图
-void CimageProcessingView::OnDraw(CDC *pDC)
+void CimageProcessingView::OnDraw(CDC* pDC)
 {
-	CimageProcessingDoc* pDoc = GetDocument();
-	ASSERT_VALID(pDoc);
-	if (!pDoc)
-		return;
+    CimageProcessingDoc* pDoc = GetDocument();
+    ASSERT_VALID(pDoc);
+    if (!pDoc)
+        return;
 
-	// TODO: 在此处为本机数据添加绘制代码
-	if( pFileBuf != NULL )
-	{
-		DisplayImage(pDC,pFileBuf,10,10,0,0,0);
-	}
+    // TODO: 在此处为本机数据添加绘制代码
+    if (pFileBuf != NULL)
+    {
+        DisplayImage(pDC, pFileBuf, 10, 10, 0, 0, 0);
+    }
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -95,136 +95,162 @@ void CimageProcessingView::OnDraw(CDC *pDC)
 //Open a BMP file
 void CimageProcessingView::OnImageprocessOpenbmpfile()
 {
-	LPCTSTR lpszFilter = "BMP Files (*.bmp)|*.bmp||";
-	CFileDialog dlg(TRUE,NULL,NULL,OFN_NOCHANGEDIR,lpszFilter,NULL);
-	if( dlg.DoModal() != IDOK ) return;
-	if( pFileBuf != NULL )
-	{
-		delete [] pFileBuf;
-	}
-	pFileBuf = OpenBMPfile( dlg.GetPathName() );
-	Invalidate();
-	UpdateWindow();
+    LPCTSTR lpszFilter = "BMP Files (*.bmp)|*.bmp||";
+    CFileDialog dlg(TRUE, NULL, NULL, OFN_NOCHANGEDIR, lpszFilter, NULL);
+    if (dlg.DoModal() != IDOK) return;
+    if (pFileBuf != NULL)
+    {
+        delete[] pFileBuf;
+    }
+    pFileBuf = OpenBMPfile(dlg.GetPathName());
+    Invalidate();
+    UpdateWindow();
 }
 
 //Save to a new BMP file
 void CimageProcessingView::OnImageprocessSavetofile()
 {
-	if(pFileBuf == NULL) return;
-	/**/
-	//Add your code to choose the new BMP filename
-	CString strBmpFile = "D:\\@1.bmp";
-	SaveDIB(pFileBuf, strBmpFile);
+    if (pFileBuf == NULL) return;
+    /**/
+    //Add your code to choose the new BMP filename
+    CString strBmpFile = "D:\\@1.bmp";
+    SaveDIB(pFileBuf, strBmpFile);
 }
 
 //Display BMP file header
 void CimageProcessingView::OnImageprocessDisplayfileheader()
 {
-	if(pFileBuf == NULL) return;
-	/**/
-	DisplayHeaderMessage(pFileBuf);
+    if (pFileBuf == NULL) return;
+    /**/
+    DisplayHeaderMessage(pFileBuf);
 }
 
 //Display Pallete
 void CimageProcessingView::OnImageprocessDisplaypalette()
 {
-	if(pFileBuf == NULL) return;
-	/**/
-	int num = 0;
-	RGBQUAD *pallete = GetDIBPaletteData(pFileBuf,&num);
-	if( pallete == NULL )
-	{
-		AfxMessageBox("No palette");
-	}
-	else
-	{
-		//Here are your code
-	}
+    if (pFileBuf == NULL) return;
+    /**/
+    int num = 0;
+    RGBQUAD* pallete = GetDIBPaletteData(pFileBuf, &num);
+    if (pallete == NULL)
+    {
+        AfxMessageBox("No palette");
+    }
+    else
+    {
+        CString msg;
+        for (int i = 0; i < num; i++)
+        {
+            msg.AppendFormat("Palette Entry %d: R=%d, G=%d, B=%d\n", i, pallete[i].rgbRed, pallete[i].rgbGreen, pallete[i].rgbBlue);
+        }
+        AfxMessageBox(msg);
+    }
 }
 
 //Get pixel value
 void CimageProcessingView::OnImageprocessGetpixelvalue()
 {
-	if(pFileBuf == NULL) return;
-	/**/
-	//Add your code to choose the coordinate (x,y)
-	int x = 100;
-	int y = 100;
-	RGBQUAD rgb;
-	bool bGray;
-	GetPixel(pFileBuf,x,y,&rgb,&bGray);
-	char buf[100];
-	if( bGray )
-		sprintf(buf, "(%d,%d) = %d",x,y,rgb.rgbReserved);
-	else
-		sprintf(buf, "(%d,%d) = (%d,%d,%d)",x,y,rgb.rgbRed,rgb.rgbGreen,rgb.rgbBlue);
-	AfxMessageBox( buf );
+    if (pFileBuf == NULL) return;
+    /**/
+    //Add your code to choose the coordinate (x,y)
+    int x = 100;
+    int y = 100;
+    RGBQUAD rgb;
+    bool bGray;
+    GetPixel(pFileBuf, x, y, &rgb, &bGray);
+    char buf[100];
+    if (bGray)
+        sprintf(buf, "(%d,%d) = %d", x, y, rgb.rgbReserved);
+    else
+        sprintf(buf, "(%d,%d) = (%d,%d,%d)", x, y, rgb.rgbRed, rgb.rgbGreen, rgb.rgbBlue);
+    AfxMessageBox(buf);
 }
 
 //Set pixel value
 void CimageProcessingView::OnImageprocessSetpixelvalue()
 {
-	if(pFileBuf == NULL) return;
-	/**/
-	//Add your code to choose the coordinate (x,y)
-	int x = 100;
-	int y = 100;
-	RGBQUAD rgb;
-	rgb.rgbReserved = 255;
-	rgb.rgbRed      = 255;
-	rgb.rgbGreen    = 255;
-	rgb.rgbBlue     = 255;
-	SetPixel(pFileBuf,x,y,rgb);
-	Invalidate();
-	UpdateWindow();
+    if (pFileBuf == NULL) return;
+    /**/
+    //Add your code to choose the coordinate (x,y)
+    int x = 100;
+    int y = 100;
+    RGBQUAD rgb;
+    rgb.rgbReserved = 255;
+    rgb.rgbRed = 255;
+    rgb.rgbGreen = 255;
+    rgb.rgbBlue = 255;
+    SetPixel(pFileBuf, x, y, rgb);
+    Invalidate();
+    UpdateWindow();
 }
 
 //Image interpolaion
 void CimageProcessingView::OnImageprocessInerpolation()
 {
-	if(pFileBuf == NULL) return;
-	/**/
-	//Add your code to choose method (nearest or bilinear) and zoom factors
-	int newWidth  = 500;
-	int newHeight = 490;
-	char *pNewImage = ImageInterpolation(pFileBuf,newWidth,newHeight,0);
-	delete [] pFileBuf;
-	pFileBuf = pNewImage;
-	Invalidate();
-	UpdateWindow();
+    if (pFileBuf == NULL) return;
+    /**/
+    //Add your code to choose method (nearest or bilinear) and zoom factors
+    int newWidth = 500;
+    int newHeight = 490;
+    char* pNewImage = ImageInterpolation(pFileBuf, newWidth, newHeight, 0);
+    delete[] pFileBuf;
+    pFileBuf = pNewImage;
+    Invalidate();
+    UpdateWindow();
 }
 
 //Gaussian smoothing
 void CimageProcessingView::OnImageprocessGausssmooth()
 {
+    if (pFileBuf == NULL) return;
+    // 简单示例：这里仅提示功能待完善
+    AfxMessageBox("Gaussian smoothing function is not fully implemented yet.");
 }
 
 //Median filtering
 void CimageProcessingView::OnImageprocessMedianfilter()
 {
+    if (pFileBuf == NULL) return;
+    // 简单示例：这里仅提示功能待完善
+    AfxMessageBox("Median filtering function is not fully implemented yet.");
 }
 
 //Bilateral filtering
 void CimageProcessingView::OnImageprocessBilateralfilter()
 {
+    if (pFileBuf == NULL) return;
+    // 简单示例：这里仅提示功能待完善
+    AfxMessageBox("Bilateral filtering function is not fully implemented yet.");
 }
 
 //Histogram equalization
 void CimageProcessingView::OnImageprocessHistoequalization()
 {
+    if (pFileBuf == NULL) return;
+    // 简单示例：这里仅提示功能待完善
+    AfxMessageBox("Histogram equalization function is not fully implemented yet.");
 }
 
 //Sharpening by gradient
 void CimageProcessingView::OnImageprocessSharpengrad()
 {
+    if (pFileBuf == NULL) return;
+    // 简单示例：这里仅提示功能待完善
+    AfxMessageBox("Sharpening by gradient function is not fully implemented yet.");
 }
 
 //Cany edge detection
 void CimageProcessingView::OnImageprocessCannyedge()
 {
+    if (pFileBuf == NULL) return;
+    // 简单示例：这里仅提示功能待完善
+    AfxMessageBox("Canny edge detection function is not fully implemented yet.");
 }
 
 //Otsu segmentation
 void CimageProcessingView::OnImageprocessOtsusegment()
 {
+    if (pFileBuf == NULL) return;
+    // 简单示例：这里仅提示功能待完善
+    AfxMessageBox("Otsu segmentation function is not fully implemented yet.");
 }
