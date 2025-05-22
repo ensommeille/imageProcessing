@@ -100,6 +100,11 @@ void CimageProcessingView::OnImageprocessOpenbmpfile()
     if (dlg.DoModal() != IDOK) return;
     if (pFileBuf != NULL)
     {
+        // 显示错误信息
+        CString msg;
+        msg.Format("Failed to open BMP file: %s", dlg.GetPathName());
+        AfxMessageBox(msg);
+        return;
         delete[] pFileBuf;
     }
     pFileBuf = OpenBMPfile(dlg.GetPathName());

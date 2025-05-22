@@ -34,8 +34,11 @@ char *OpenBMPfile(CString strBmpFile)
 	    pBmpInfo->biSize   != 0x28   ||		// 位图信息子结构长度(等于40,即0x28)
 		pBmpInfo->biPlanes != 0x01 )		// 此域必须等于1
 	{
-		AfxMessageBox("It isn't a valid BMP file");
-		return( NULL );
+		CString msg;
+		msg.Format("Invalid BMP file: bfType = %04X, biSize = %ld, biPlanes = %u",
+			pBmpHead->bfType, pBmpInfo->biSize, pBmpInfo->biPlanes);
+		AfxMessageBox(msg);
+		return(NULL);
 	}
 	/**/
 	if( pBmpInfo->biCompression != BI_RGB )
